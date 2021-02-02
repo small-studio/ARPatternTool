@@ -21,6 +21,7 @@ class FillReferenceImageLibrary : Editor {
             UnityEditor.XR.ARSubsystems.XRReferenceImageLibraryExtensions.SetTexture(library, i, texture, true);
             UnityEditor.XR.ARSubsystems.XRReferenceImageLibraryExtensions.SetSize(library, i, new Vector2(0.1f, 0.1f));
             UnityEditor.XR.ARSubsystems.XRReferenceImageLibraryExtensions.SetName(library, i, texture.name);
+            UnityEditor.XR.ARSubsystems.XRReferenceImageLibraryExtensions.SetSpecifySize(library, i, true);
             i++;
         }
 
