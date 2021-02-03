@@ -1,20 +1,26 @@
 ﻿#if UNITY_EDITOR
+using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.XR.ARSubsystems;
 
 class FillReferenceImageLibrary : Editor {
-    [MenuItem("SMALL/Set Pattern")]
+    [MenuItem("SMALL/Add patterns to library")]
     public static void SetPattern() {
         int i = 0;
         var library = (XRReferenceImageLibrary) AssetDatabase.LoadAssetAtPath("Assets/Misc/Data/ReferenceImageLibrary.asset", typeof(XRReferenceImageLibrary));
-        Object[] textureArray = Resources.LoadAll("Patterns", typeof(Texture2D));
+        UnityEngine.Object[] textureArray = Resources.LoadAll("Patterns", typeof(Texture2D));
+
+        if (textureArray.Length == 0) {
+            EditorUtility.DisplayDialog("No Pattern Founded", "Please add pattern in Resources/Patterns folder", "Ok", "");
+            return;
+        }
 
         EditorUtility.SetDirty(library);
 
         while (i < textureArray.Length) {
             Texture2D texture = (Texture2D) textureArray[i];
-            if (library.count < i) {
+            if (library.count <= i) {
                 UnityEditor.XR.ARSubsystems.XRReferenceImageLibraryExtensions.Add(library);
             }
 
@@ -28,7 +34,9 @@ class FillReferenceImageLibrary : Editor {
         while (i < library.count) {
             UnityEditor.XR.ARSubsystems.XRReferenceImageLibraryExtensions.RemoveAt(library, i);
         }
-
+        if (EditorUtility.DisplayDialog("Pattern Added", "Pattern has been added to library, Do you wish to continue to build menu ? :)", "Yes", "No")) {
+            EditorWindow.GetWindow(Type.GetType("UnityEditor.BuildPlayerWindow,UnityEditor"));
+        }
     }
 }
 #endif
